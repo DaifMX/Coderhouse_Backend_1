@@ -1,0 +1,41 @@
+[
+	{
+		"pid": 1,
+		"title": "RTX 4090",
+		"description": "MSI NVIDIA GeForce RTX 4090 x Trio",
+		"code": "N1",
+		"price": 24000,
+		"status": true,
+		"stock": 10,
+		"category": "GPU",
+		"thumbnails": [
+			"dir"
+		]
+	},
+	{
+		"pid": 2,
+		"title": "RX 7900 XTX",
+		"description": "Gigabtye AMD Radeon RX 7900 XTX",
+		"code": "A1",
+		"price": 21000,
+		"status": true,
+		"stock": 45,
+		"category": "GPU",
+		"thumbnails": [
+			"dir"
+		]
+	},
+	{
+		"pid": 3,
+		"title": "RTX 2080",
+		"description": "NVIDIA GeForce RTX 2080",
+		"code": "A2",
+		"price": 8000,
+		"status": true,
+		"stock": 1,
+		"category": "GPU",
+		"thumbnails": [
+			"dir"
+		]
+	}
+]
