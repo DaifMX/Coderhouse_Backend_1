@@ -1,7 +1,6 @@
 import fs from 'fs';
 import ElementNotFoundError from '../errors/ElementNotFoundError.js';
-import validate from '../schema/CartSchema.js';
-import { getByPid } from './ProductService.js';
+import validate from '../schemas/CartSchema.js';
 
 const PATH = './src/db/Carts.json';
 const cartObject = JSON.parse(await fs.promises.readFile(PATH, 'utf-8'));

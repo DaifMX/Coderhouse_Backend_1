@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import * as Service from '../services/ProductService.js'
 import ProductController from '../controllers/ProductController.js';
+import { upload } from '../utils.js';
 
 //===============NOTA===============//
 //Para tener de manera más prolija mi proyecto, decidí tener mis logicas por separado
@@ -18,7 +19,7 @@ router.get('/', controller.getAll); //Obtener todos
 router.get('/:pid', controller.getByPid); //Obtener el producto por ID
 
 //POST
-router.post('/', controller.create); //Ingresar un producto
+router.post('/', upload.none(), controller.create); //Ingresar un producto
 
 //PUT
 router.put('/:pid', controller.update); //Actualizar un producto

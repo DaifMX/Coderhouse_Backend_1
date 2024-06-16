@@ -1,5 +1,5 @@
 import fs from 'fs';
-import validate from '../schema/ProductSchema.js';
+import validate from '../schemas/ProductSchema.js';
 import ElementNotFoundError from '../errors/ElementNotFoundError.js';
 
 const PATH = './src/db/Products.json';
@@ -21,6 +21,7 @@ export const getByPid = (pid) => {
 export const create = async (product) => {
     if(!products.some(e => e.code === product.code)){
         //Save Product
+    
         product = {
             pid: products.length + 1,
             title: product.title,
@@ -32,27 +33,24 @@ export const create = async (product) => {
             category: product.category,
             thumbnails: product.thumbnails,
         };
-
+        
         const newProduct = validate(product);
 
         products.push(newProduct);
         await fs.promises.writeFile(PATH, JSON.stringify(products, null, '\t'));
         
-        return products[products.length -1];
+        return {type: 'CREATE', values: products[products.length -1]};
     
     } else {
         //Update Stock
         const index = products.findIndex(e => e.code === product.code);
         const productInDb = products[index];
 
-        productInDb.stock = productInDb.stock + product.stock;
+        productInDb.stock = productInDb.stock + parseInt(product.stock);
         await fs.promises.writeFile(PATH, JSON.stringify(products, null, '\t'));
-
-        return {
-            msg: 'This product already existed on the data base. As a result, its stock got updated.', 
-            productInDb,
-        };
+        return {type: 'UPDATE', values: productInDb};
     }
+    
 };
 
 export const update = async (pid, newProduct) => {

@@ -67,7 +67,7 @@ const validate = (product, isUpdate = false) => {
         thumbnails: Joi.array()
             .items(Joi.string())
             .alter({
-                save: (schema) => schema.required(),
+                save: (schema) => schema.optional(),
                 update: (schema) => schema.optional()
             }),
     });

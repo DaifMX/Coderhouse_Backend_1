@@ -1,0 +1,59 @@
+<h1>Insertar producto</h1>
+
+<form id="productsForm">
+    <label>Titulo</label>
+    <input name="title">
+    </br>
+
+    <label>Descripción</label>
+    <input name="description">
+    </br>
+
+    <label>Código</label>
+    <input name="code">
+    </br>
+
+    <label>Precio</label>
+    <input name="price">
+    </br>
+
+    <label>Stock</label>
+    <input name="stock" type="number">
+    </br>
+
+    <label>Categoría</label>
+    <input name="category">
+    </br>
+
+    <input type="submit">
+</form>
+
+<br/>
+
+<h1>Productos</h1>
+<div id='productsContainer'>
+{{#if products}}
+    <h1>Lista de productos</h1>
+{{else}}
+    <h1>No hay productos en este momento</h1>
+{{/if}}
+
+{{#each products}}
+    <div>
+        <p>{{this.title}}</p>
+        <p>{{this.description}}</p>
+        <p>{{this.code}}</p>
+        <p>{{this.price}}</p>
+        <p>{{this.status}}</p>
+        <p>{{this.stock}}</p>
+        <p>{{this.category}}</p>
+        <p>{{this.thumbnails}}</p>
+    </div>
+    <br/>
+{{/each}}
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script type="module" src="/js/index.js"></script>
+<script type="module" src="/js/RealTimeProducts.js"></script>

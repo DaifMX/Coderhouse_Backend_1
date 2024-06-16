@@ -12,7 +12,12 @@ class ProductController {
 
         try {
             const products = await this.service.getAll();
-            res.status(200).json(products.slice(0, limit));
+            if ( limit ){
+                res.status(200).json(products.slice(0, limit))
+                return
+            }
+            res.status(200).json(products)
+            
         
         } catch (err) {
             res.status(500).json({error: err.message});
@@ -33,6 +38,15 @@ class ProductController {
     create = async(req, res) => {
         try {
             const product = await this.service.create(req.body);
+            const {type, values} = product
+            
+            if ( type === 'CREATE' ) {
+                req.io.emit('newProduct', {type, values: product.values});
+
+            } else if ( type === 'UPDATE' ) {
+                req.io.emit('newProduct', {type, values: this.service.getAll()});
+            }
+            
             res.status(201).json(product);
 
         } catch (err) {
@@ -64,7 +78,7 @@ class ProductController {
             res.status(200).json({msg: 'Success'});
 
         } catch (err) {
-            res.status(404).json({error: err.message})
+            res.status(404).json({error: err.message});
         }
     };
 }

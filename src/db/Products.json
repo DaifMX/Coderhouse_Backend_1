@@ -6,7 +6,7 @@
 		"code": "N1",
 		"price": 24000,
 		"status": true,
-		"stock": 10,
+		"stock": 264,
 		"category": "GPU",
 		"thumbnails": [
 			"dir"
@@ -37,5 +37,68 @@
 		"thumbnails": [
 			"dir"
 		]
+	},
+	{
+		"pid": 4,
+		"title": "AlgoBien",
+		"description": "Algo",
+		"code": "A11",
+		"price": 10,
+		"status": true,
+		"stock": 50,
+		"category": "Algo"
+	},
+	{
+		"pid": 5,
+		"title": "RTX 2080",
+		"description": "NVIDIA GeForce RTX 2080",
+		"code": "A3",
+		"price": 8000,
+		"status": true,
+		"stock": 5,
+		"category": "GPU",
+		"thumbnails": [
+			"dir"
+		]
+	},
+	{
+		"pid": 6,
+		"title": "AlgoBien",
+		"description": "Algo",
+		"code": "A15",
+		"price": 10,
+		"status": true,
+		"stock": 370,
+		"category": "Algo"
+	},
+	{
+		"pid": 7,
+		"title": "ASdyyasdasdasd",
+		"description": "asdasda",
+		"code": "N11",
+		"price": 1,
+		"status": true,
+		"stock": 1,
+		"category": "asdasd"
+	},
+	{
+		"pid": 8,
+		"title": "ASdyyasdasdasd",
+		"description": "asdasda",
+		"code": "N12",
+		"price": 1,
+		"status": true,
+		"stock": 1,
+		"category": "asdasd"
+	},
+	{
+		"pid": 9,
+		"title": "asdasdaa",
+		"description": "asdasd",
+		"code": "N2",
+		"price": 11,
+		"status": true,
+		"stock": 12,
+		"category": "ASd"
 	}
 ]
