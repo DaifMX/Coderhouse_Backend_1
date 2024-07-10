@@ -8,37 +8,47 @@ class ProductController {
     }
 
     getAll = async(req, res) => {
-        const limit = parseInt(req.query.limit);
+        let limit = 10;
+        const pageNumber = parseInt(req.query.page);
 
+        if(req.query.limit) limit = parseInt(req.query.limit);
+        if(req.query.limit < 1) limit = 10;
+        
         try {
-            const products = await this.service.getAll();
-            if ( limit ){
-                res.status(200).json(products.slice(0, limit))
-                return
-            }
-            res.status(200).json(products)
-            
+            const payload = await this.service.getAll(limit, pageNumber);
+            res.status(200).json({
+                status: 'success',
+                payload: payload.docs.slice(0, limit),
+                totalPages: payload.totalPages,
+                prevPage: payload.prevPage,
+                nextPage: payload.nextPage,
+                page: pageNumber,
+                hasPrevPage: payload.hasPrevPage,
+                hasNextPage: payload.hasNextPage,
+                prevLink: payload.hasPrevPage ? `localhost:8080/api/products?limit=${limit}&page=${pageNumber-1}` : null,
+                nextLink: payload.hasNextPage ? `localhost:8080/api/products?limit=${limit}&page=${pageNumber+1}`: null,
+            });
         
         } catch (err) {
-            res.status(500).json({error: err.message});
+            res.status(500).json({status: 'success', error: err.message});
         }
     };
 
-    getByPid = async(req, res) => {
+    getByCode = async(req, res) => {
         try {
-            const pid = req.params.pid;
-            const product = await this.service.getByPid(pid);
-            res.status(200).json(product);
+            const code = req.params.code;
+            const product = await this.service.getByCode(code);
+            res.status(200).json({status: 'success', payload: product});
 
         } catch (err) {
-            res.status(404).json({error: err.message});
+            res.status(404).json({status: 'error', error: err.message});
         }
     };
 
     create = async(req, res) => {
         try {
             const product = await this.service.create(req.body);
-            const {type, values} = product
+            const {type, values} = product;
             
             if ( type === 'CREATE' ) {
                 req.io.emit('newProduct', {type, values: product.values});
@@ -56,14 +66,14 @@ class ProductController {
 
     update = async(req, res) => {
         try {
-            const pid = req.params.pid;
+            const code = req.params.code;
             const product = req.body;
-            const newProduct = await this.service.update(pid, product);
-            res.status(201).json(newProduct);
+            const newProduct = await this.service.update(code, product);
+            res.status(201).json({status: 'success', payload: newProduct});
 
         } catch (err) {
             if(err instanceof ElementNotFoundError){
-                res.status(404).json({error: err.message});
+                res.status(400).json({error: err.message});
             
             } else if(err instanceof Error) {
                 res.status(500).json({error: err.message});
@@ -73,9 +83,11 @@ class ProductController {
 
     remove = async (req, res) => {
         try {
-            const pid = req.params.pid;
-            await this.service.remove(pid);
-            res.status(200).json({msg: 'Success'});
+            const code = req.params.code;
+            const payload = await this.service.remove(code);
+
+            if(!payload) res.status(400).json({msg: 'Producto no existente'})
+            res.status(200).json({status: 'success', msg: 'Producto removido', payload: payload});
 
         } catch (err) {
             res.status(404).json({error: err.message});

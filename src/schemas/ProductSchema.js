@@ -4,12 +4,6 @@ const validate = (product, isUpdate = false) => {
     const tailor = isUpdate ? 'update' : 'save';
 
     const schema = Joi.object({
-        pid: Joi.number()
-            .alter({
-                save: (schema) => schema.required(),
-                update: (schema) => schema.optional()
-            }),
-    
         title: Joi.string()
             .min(8)
             .max(36)

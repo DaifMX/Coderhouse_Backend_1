@@ -1,8 +1,9 @@
-import { getAll } from "../services/ProductService.js";
+import ProductController from "./ProductController.js";
 
 class ViewController {
     home = (req, res) => {
-        const products = getAll();
+        const controller = new ProductController(Service);
+        const products = controller.getAll();
 
         //Nombre de la plantilla de handlebars
         res.render('Home', {
