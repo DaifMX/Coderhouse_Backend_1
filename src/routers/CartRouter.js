@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import CartController from '../controllers/CartController.js'
-import { CartService } from '../services/index.js';
+import CartService from '../services/CartService.js';
 
+//------------------------------------------------------
 const router = Router();
-const controller  = new CartController(CartService);
+const service = new CartService(); 
+const controller = new CartController(service);
 
 router.get('/:cid', controller.getByCid);
 

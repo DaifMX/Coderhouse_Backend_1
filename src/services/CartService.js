@@ -1,29 +1,30 @@
-import ElementNotFoundError from '../../errors/ElementNotFoundError.js';
-import ProductModel from './models/ProductModel.js';
-import CartModel from './models/CartModel.js';
+import ElementNotFoundError from '../errors/ElementNotFoundError.js';
+import ProductModel from '../db/mongo/models/ProductModel.js';
+import CartModel from '../db/mongo/models/CartModel.js';
 
-export default class CartManager {   
-        create = async (cartEntry) => {
-            const cartOnDb = new CartModel();
+//------------------------------------------------------
+export default class CartService {   
+    create = async (cartEntry) => {
+        const cartOnDb = new CartModel();
 
-            for(const item of cartEntry.products){
-                const pid = item.product;
-                const product = await ProductModel.findOne({_id: pid});
+        for(const item of cartEntry.products){
+            const pid = item.product;
+            const product = await ProductModel.findOne({_id: pid});
 
-                if(!product) throw new Error(`Producto con código ${pid} no existe en la base de datos.`);
+            if(!product) throw new Error(`Producto con código ${pid} no existe en la base de datos.`);
 
-                const theoricalStockLeft = product.stock - item.quantity;
+            const theoricalStockLeft = product.stock - item.quantity;
 
-                if(theoricalStockLeft < 1) throw new Error('Stock insuficiente.');
+            if(theoricalStockLeft < 0) throw new Error('Stock insuficiente.');
 
-                cartOnDb.products.push({product: pid, quantity: item.quantity});
-                product.stock = theoricalStockLeft;
-                await product.save();
-            }
-            
-            await cartOnDb.save();
-            return cartOnDb;
-        };
+            cartOnDb.products.push({product: pid, quantity: item.quantity});
+            product.stock = theoricalStockLeft;
+            await product.save();
+        }
+        
+        await cartOnDb.save();
+        return cartOnDb;
+    };
 
     getByCid = async (cid) => {
         const cart = await CartModel.findOne({_id: cid});

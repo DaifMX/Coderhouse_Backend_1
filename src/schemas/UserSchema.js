@@ -5,66 +5,46 @@ const validate = (product, isUpdate = false) => {
     const tailor = isUpdate ? 'update' : 'save';
 
     const schema = Joi.object({
-        title: Joi.string()
-            .min(8)
-            .max(36)
+        first_name: Joi.string()
+            .pattern(/^[A-Za-zÑñÁáÉéÍíÓóÚúÜü ]{1,50}$/)
             .alter({
                 save: (schema) => schema.required(),
                 update: (schema) => schema.optional()
             }),
     
-        description: Joi.string()
+        last_name: Joi.string()
+            .pattern(/^[A-Za-zÑñÁáÉéÍíÓóÚúÜü ]{1,50}$/)
             .alter({
                 save: (schema) => schema.required(),
                 update: (schema) => schema.optional()
         }),
     
-        code: Joi.string()
-            .min(2)
-            .max(5)
-            .alphanum()
-            .uppercase()
+        email: Joi.string()
+            .email()
             .alter({
                 save: (schema) => schema.required(),
                 update: (schema) => schema.optional()
             }),
     
-        price: Joi.number()
+        age: Joi.number()
             .positive()
-            .greater(0)
+            .greater(15)
             .alter({
                 save: (schema) => schema.required(),
                 update: (schema) => schema.optional()
             }),
     
-        status: Joi.boolean()
-            .truthy('yes', 'true', 't')
-            .falsy('no', 'false', 'f')
+        password: Joi.string()
             .alter({
                 save: (schema) => schema.required(),
                 update: (schema) => schema.optional()
             }),
     
-        stock: Joi.number()
+        cartId: Joi.number()
             .positive()
-            .alter({
-                save: (schema) => schema.required(),
-                update: (schema) => schema.optional()
-            }),
+            .optional(),
         
-        category: Joi.string()
-            .alphanum()
-            .alter({
-                save: (schema) => schema.required(),
-                update: (schema) => schema.optional()
-            }),
-    
-        thumbnails: Joi.array()
-            .items(Joi.string())
-            .alter({
-                save: (schema) => schema.optional(),
-                update: (schema) => schema.optional()
-            }),
+        role: Joi.string().default('user')
     });
 
     const { error, value } = schema.tailor(tailor).validate(product);

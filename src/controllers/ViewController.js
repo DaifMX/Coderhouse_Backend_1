@@ -1,8 +1,9 @@
 import ProductController from "./ProductController.js";
 
-class ViewController {
+//------------------------------------------------------
+export default class ViewController {
     home = (req, res) => {
-        const controller = new ProductController(Service);
+        const controller = new ProductController();
         const products = controller.getAll();
 
         //Nombre de la plantilla de handlebars
@@ -21,5 +22,3 @@ class ViewController {
         })
     };
 }
-
-export default ViewController;

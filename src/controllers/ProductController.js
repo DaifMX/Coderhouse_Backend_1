@@ -1,6 +1,7 @@
 import ElementNotFoundError from "../errors/ElementNotFoundError.js";
 
-class ProductController {
+//------------------------------------------------------
+export default class ProductController {
     service; //Declaración de variables
 
     constructor(service) {
@@ -94,5 +95,3 @@ class ProductController {
         }
     };
 }
-
-export default ProductController;

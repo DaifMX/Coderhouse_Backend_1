@@ -1,10 +1,12 @@
 import {Router} from 'express';
-import { ProductService } from '../services/index.js';
+import ProductService from '../services/ProductService.js';
 import ProductController from '../controllers/ProductController.js';
 import { upload } from '../utils.js';
 
+//------------------------------------------------------
 const router = Router();
-const controller = new ProductController(ProductService);
+const service = new ProductService();
+const controller = new ProductController(service);
 
 //GET
 router.get('/', controller.getAll); //Obtener todos

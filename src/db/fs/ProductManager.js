@@ -2,7 +2,7 @@ import fs from 'fs';
 import validate from '../../schemas/ProductSchema.js';
 import ElementNotFoundError from '../../errors/ElementNotFoundError.js';
 
-const PATH = './src/db/Products.json';
+const PATH = './src/_mock/Products.json';
 const productObject = JSON.parse(await fs.promises.readFile(PATH, 'utf-8'));
 const products = Object.values(productObject); //Array de Objetos transformado del JSON
 

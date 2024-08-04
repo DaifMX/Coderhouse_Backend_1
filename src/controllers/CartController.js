@@ -1,4 +1,5 @@
-class CartController {
+//------------------------------------------------------
+export default class CartController {
     service;
 
     constructor(service){
@@ -81,5 +82,3 @@ class CartController {
         }
     };
 }
-
-export default CartController;

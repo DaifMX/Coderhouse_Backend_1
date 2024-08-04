@@ -1,5 +1,6 @@
 import Joi from "joi";
 
+//------------------------------------------------------
 const validate = (product, isUpdate = false) => {
     const tailor = isUpdate ? 'update' : 'save';
 
