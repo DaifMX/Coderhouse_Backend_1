@@ -1,11 +1,12 @@
-import { Router } from "express";
+import BaseRouter from './BaseRouter.js';
 import ViewController from "../controllers/ViewController.js";
 
 //------------------------------------------------------
-const router = Router();
 const controller = new ViewController;
 
-router.get('/', controller.home);
-router.get('/realtimeproducts', controller.realTimeProducts);
-
-export default router;
+export default class ViewRouter extends BaseRouter{    
+    init(){
+        this.get('/', [], controller.home);
+        this.get('/realtimeproducts', [], controller.realTimeProducts);
+    }
+}

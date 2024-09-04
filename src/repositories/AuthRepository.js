@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 
 //------------------------------------------------------
-export default class AuthService {
+export default class AuthRepository {
     constructor(params) {
         this.params = params;
     }

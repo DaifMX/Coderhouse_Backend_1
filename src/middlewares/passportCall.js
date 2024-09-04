@@ -1,12 +1,20 @@
 import passport from "passport";
-
 export const passportCall = (strategy) =>{
-    return async(req,res,next)=>{
-        passport.authenticate(strategy,function(error,user,info){
-            if(error) return next(error);
+    return async(req,res,next) =>{
+        passport.authenticate(strategy, function(error,user,info){
 
-            if(!user) req.user = null;
+            if(error) return next(error);
             
+            if(!user){
+                req.user = null;
+                if (info.message == "No auth token"){
+                    return next();
+    
+                } else {
+                    return res.sendUnauthorized(info.message);
+                }
+            }
+
             req.user = user;
             next();
         })(req,res,next);

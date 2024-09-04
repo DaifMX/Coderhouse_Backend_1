@@ -1,24 +1,24 @@
-import {Router} from 'express';
-import ProductService from '../services/ProductService.js';
+import BaseRouter from './BaseRouter.js';
 import ProductController from '../controllers/ProductController.js';
 import { upload } from '../utils.js';
 
 //------------------------------------------------------
-const router = Router();
-const service = new ProductService();
-const controller = new ProductController(service);
 
-//GET
-router.get('/', controller.getAll); //Obtener todos
-router.get('/:code/', controller.getByCode); //Obtener el producto por ID
+const controller = new ProductController();
 
-//POST
-router.post('/', upload.none(), controller.create); //Ingresar un producto
+export default class ProductRouter extends BaseRouter{
+    init(){
+        //GET
+        this.get('/', ['USER'], controller.getAll); //Obtener todos
+        this.get('/:code/', ['USER'], controller.getByCode); //Obtener el producto por ID
 
-//PUT
-router.put('/:code', controller.update); //Actualizar un producto
+        //POST
+        this.post('/', ['ADMIN'], upload.none(), controller.create); //Ingresar un producto
 
-//DELETE
-router.delete('/:code', controller.remove); //Remover un producto
+        //PUT
+        this.put('/:code', ['ADMIN', 'USER'], controller.update); //Actualizar un producto
 
-export default router;
+        //DELETE
+        this.delete('/:code', ['ADMIN'], controller.remove); //Remover un producto
+    }
+}

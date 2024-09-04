@@ -1,30 +1,32 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
-import { ExtractJwt, Strategy as JWTStrategy} from "passport-jwt";
+import { Strategy as JWTStrategy } from "passport-jwt";
 
-import UserService from "../services/UserService.js";
-import AuthService from "../services/AuthService.js";
+import {authService, userService} from "../repositories/index.js";
 
-const service = new UserService();
+function cookieExtractor(req) {
+    return req?.cookies?.['token'];
+};
 
 const initializePassportConfig = () =>{
     passport.use('register', new LocalStrategy({usernameField:'email',passReqToCallback:true},async (req,email,password,done)=>{
-        const isUserInDb = await service.getByEmail(email);
+        const isUserInDb = await userService.getByEmail(email);
         if(isUserInDb){
             return done(null,false,{message:"User already exists"});
         };
 
-        const user = service.create(req.body);
+        const user = userService.create(req.body);
         return done(null, user);
     }));
 
     passport.use('login', new LocalStrategy({usernameField:'email'},async(email,password,done)=>{
-        const user = await service.getByEmail(email);
+        if(!email || !password) return done(null, false, {message: 'Incomplete credentials'})
+
+        const user = await userService.getByEmail(email);
 
         if(!user) return done(null, false, {message:"Incorrect credentials"});
 
-        const auth = new AuthService();
-        const isValidPassword = await auth.validatePassword(password, user.password);
+        const isValidPassword = await authService.validatePassword(password, user.password);
 
         if(!isValidPassword) return done(null,false,{message:"Incorrect credentials"});
 
@@ -33,13 +35,15 @@ const initializePassportConfig = () =>{
 
     passport.use('current',new JWTStrategy({
         secretOrKey:'IAmASecretKey',
-        jwtFromRequest:ExtractJwt.fromExtractors([cookieExtractor])
-    }, async (payload,done) => done(null,payload)
+        jwtFromRequest: cookieExtractor
+    }, async (payload,done) => {
+        done(null, payload)
+    }
     ));
+
+    return passport;
 };
 
-function cookieExtractor(req){
-    return req?.cookies?.['token'];
-};
+const passportWithConfig = initializePassportConfig();
 
-export default initializePassportConfig;
+export default passportWithConfig;

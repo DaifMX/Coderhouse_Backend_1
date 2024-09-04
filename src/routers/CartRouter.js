@@ -1,24 +1,23 @@
-import { Router } from 'express';
-import CartController from '../controllers/CartController.js'
-import CartService from '../services/CartService.js';
+import BaseRouter from './BaseRouter.js';
+import CartController from '../controllers/CartController.js';
+
+const controller = new CartController()
 
 //------------------------------------------------------
-const router = Router();
-const service = new CartService(); 
-const controller = new CartController(service);
+export default class CartRouter extends BaseRouter {
+    init() {
+        this.put('/:cid/products/:pid', ['USER'], controller.increaseQuantityFromProduct);
 
-router.get('/:cid', controller.getByCid);
+        this.put('/:cid', ['USER'], controller.replaceCart);
 
-router.post('/', controller.create);
+        this.put('/:cid/purchase', ['USER'], controller.purchase);
 
-//En la asignatura nos venia que pusieramos un POST, sin embargo como estamos
-//modificando el array de un objeto ya existente me parece más pertinenete usar un PUT.
-router.put('/:cid/products/:pid', controller.increaseQuantityFromProduct);
+        this.delete('/:cid/products/:pid', ['USER'], controller.deleteProductFromCart);
 
-router.put('/:cid', controller.replaceCart);
+        this.delete('/:cid', ['USER'], controller.wipeProductsFromCart);
 
-router.delete('/:cid/products/:pid', controller.deleteProductFromCart);
+        this.get('/:cid', ['USER'], controller.getByCid);
 
-router.delete('/:cid', controller.wipeProductsFromCart);
-
-export default router;
+        this.post('/', ['USER'], controller.create);
+    }
+}

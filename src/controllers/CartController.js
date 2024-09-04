@@ -1,32 +1,47 @@
+import {cartService, ticketService} from '../repositories/index.js';
+import { jwtDecode } from 'jwt-decode';
+
 //------------------------------------------------------
-export default class CartController {
-    service;
-
-    constructor(service){
-        this.service = service;
-    };
-
+export default class CartController{
     getByCid = async (req, res) => {
         try {
             const cid = req.params.cid;
-            const cart = await this.service.getByCid(cid);
-            res.status(200).json({status: 'success', payload: cart});
+            const cart = await cartService.getByCid(cid);
+            res.sendSuccess(cart);
 
         } catch (err){
-            res.status(404).json({status: 'error', error: err.message});
+            res.sendNotFound(err.message);
         }
 
     };
 
     create = async (req, res) => {
         try {
-            const cart = await this.service.create(req.body);
-            res.status(201).json({status: 'success', payload: cart});
+            const cart = await cartService.create(req.body);
+            res.sendCreated(cart);
 
         } catch (err){
-            res.status(500).json({status: 'error', error: err.message});
+            res.sendInternalServerError(err.message);
         }
     };
+
+    purchase = async (req, res) => {
+        try {
+            const cid = req.params.cid;
+            const token = req.cookies.token;
+
+            const decodedToken = jwtDecode(token);
+            const uid = decodedToken.id;
+
+            const ticket = await cartService.purchase(cid, uid);
+
+            res.sendSuccess(ticket);
+
+        } catch (err){
+            console.log(err.message)
+            res.sendInternalServerError(err.message);
+        }
+    }
 
     increaseQuantityFromProduct = async (req, res) => {
         try {
@@ -35,11 +50,11 @@ export default class CartController {
 
             const quantity = req.body.quantity;
             
-            const newCart = await this.service.increaseQuantityFromProduct(cid, pid, quantity);
-            res.status(200).json({status: 'success', payload: newCart});
+            const newCart = await cartService.increaseQuantityFromProduct(cid, pid, quantity);
+            res.sendSuccess(newCart);
 
         } catch (err){
-            res.status(400).json({status: 'error', error: err.message});
+            res.sendBadRequest(err.message)        
         }
     };
 
@@ -48,12 +63,12 @@ export default class CartController {
             const cid = req.params.cid;
             const newCart = req.body;
 
-            const cart = await this.service.replaceCart(cid, newCart);
+            const cart = await cartService.replaceCart(cid, newCart);
 
-            res.status(200).json({status: 'success', payload: cart});
+            res.sendSuccess(cart);
             
         } catch (err){
-            res.status(400).json({status: 'error', error: err.message});
+            res.sendBadRequest(err.message)        
         }
     };
 
@@ -62,23 +77,23 @@ export default class CartController {
             const cid = req.params.cid;
             const pid = req.params.pid;
 
-            const cart = await this.service.deleteProductFromCart(cid, pid);
-            res.status(200).json({status: 'success', payload: cart});
+            const cart = await cartService.deleteProductFromCart(cid, pid);
+            res.sendSuccess(cart);
 
         } catch (err) {
-            res.status(400).json({status: 'error', error: err.message});
+            res.sendBadRequest(err.message)        
         }
     };
 
     wipeProductsFromCart = async (req, res) => {
         try{
             const cid = req.params.cid;
-            const cart = await this.service.wipeProductsFromCart(cid);
+            const cart = await cartService.wipeProductsFromCart(cid);
 
-            res.status(200).json({status: 'success', payload: cart});
+            res.sendSuccess(cart);
 
         } catch (err) {
-            res.status(400).json({status: 'error', error: err.message});
+            res.sendBadRequest(err.message)        
         }
     };
 }

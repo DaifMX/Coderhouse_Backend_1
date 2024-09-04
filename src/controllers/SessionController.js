@@ -1,16 +1,15 @@
 import jwt from 'jsonwebtoken';
+import UserDto from '../dto/UserDto.js';
 
 //------------------------------------------------------
 export default class SessionController{
-    register = async (req,res) => {
-        res.send({status:"success",message:"Registered"});
-    };
+    register = async (_req, res) => res.sendSuccess();
     
     login = async (req, res) => { 
         const sessionUser = {
-            name:`${req.user.firstName} ${req.user.lastName}`,
+            id:req.user._id,
+            fullName:`${req.user.first_name} ${req.user.last_name}`,
             role:req.user.role,
-            id:req.user._id
         };
 
         const token = jwt.sign(sessionUser, 'IAmASecretKey', {expiresIn:'1d'});
@@ -19,12 +18,13 @@ export default class SessionController{
     
     current = async(req, res) => {
         if(!req.user){
-            return res.status(401).send({status:"error",error:"Not logged in"});
+            return res.sendUnauthorized();
         }
-        res.send(req.user);
+
+        const userObj = new UserDto(req.user);
+        
+        res.sendAccepted(userObj);
     };
     
-    logout = async(req, res) => {
-        res.clearCookie('token');
-    };
+    logout = async(_req, res) => res.clearCookie('token');
 }
